@@ -8,9 +8,10 @@
         #container {
             height: 50vh;
             background-color: greenyellow;
-            position: relative;
-            border-radius:20px;
+            border-radius: 20px;
             overflow: hidden;
+            position: relative;
+            
         }
         #road{
             height: 50px;
@@ -19,6 +20,7 @@
             position: absolute;
             bottom: 0px;
         }
+
         #dino{
             width: 50px;
             height: 50px;
@@ -41,7 +43,8 @@
             animation-name: moveright;
             animation-duration: 5s;
             animation-iteration-count: infinite;
-            animation-timing-function: linear;
+            animation-timing-function:linear;
+
         }
         @keyframes moveright{
             from {
@@ -50,31 +53,94 @@
             to{
                 right: 100%;
             }
-         }
-         .jump{
-            animation-name: jump;
-            animation-duration: 1s;
+        }
+        .jump{
+            animation-name: Alen;
+            animation-duration: 1.5s;
             animation-iteration-count: 1;
             animation-timing-function: ease-in-out;
-         }
-         @keyframes jump{
-            from{
-                bottom: 50px;
-            }
-            to{
-                bottom:200px;
-            }
-            }
-        
-        
+        }
+        @keyframes Alen{
+           0%{
+            bottom: 50px;
+           }
+           25%{
+            bottom: 100px;
+           }
+           50%{
+            bottom: 150px;
+           }
+           75%{
+            bottom: 100px;
+           }
+           100%{
+            bottom: 50px;
+           }
+
+        }
     </style>
 </head>
 <body>
     <div id="container">
-        <div id="dino" class="jump">Dino</div>
-        <div id="obs" class="obs-move">Obj</div>
+        <h3>Score:0</h3>
+        <div id="dino">Dino</div>
+        <div id="obs">Obj</div>
         <div id="road">Road</div>
-
     </div>
-    </body>
+</body>
+<script>
+    const object = document.getElementById("obs");
+    const dino = document.getElementById("dino");
+    document.addEventListener("keydown",function(event){
+        if(event.key == "Enter"){
+            object.classList.add("obs-move");
+        }
+        if(event.key == "Escape"){
+            object.classList.remove("obs-move");
+        }
+
+    })
+
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "w") {
+            dino.classList.add("jump");
+            setTimeout(() => {
+                dino.classList.remove("jump");
+            }, 1500);
+        }
+    }
+);
+
+
+    let score = 0;
+    let isGiveScore = false;
+    const timer = setInterval(() => {
+        const dinoRange = dino.getBoundingClientRect();
+        const obsRange = object.getBoundingClientRect();
+        const check = dinoRange.right > obsRange.left && 
+            dinoRange.left < obsRange.right &&
+            dinoRange.bottom > obsRange.top &&
+            dinoRange.top < obsRange.bottom;
+        if (check) {
+            alert("Game Over");
+            clearInterval(timer);
+             object.classList.remove("obs-move");
+        }
+        if(!isGiveScore && obsRange.left> dinoRange.right){
+            score++;
+            const scoreBoard = document.querySelector("h3");
+            scoreBoard.innerText = "Score: " + score;
+            scoreBoard.style.textAlign="center"
+            console.log("Score: " + score);
+            isGiveScore = true;
+        }
+
+        if(dinoRange.right > obsRange.left){
+            isGiveScore=false;
+        }
+    }, 100);
+
+
+    
+</script>
 </html>
